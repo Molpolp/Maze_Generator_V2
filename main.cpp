@@ -15,9 +15,9 @@ void drawEntryOrExit(MAZE::EntryAndExit &wallToBreak, int cellHeight, int height
 
 int main() {
 	int mazeHeight = VI::verifyIntInput
-					("Please specify the height of the maze in the range [5, 50]: ",5, 50);
+					("Please specify the height of the maze in the range [5, 100]: ",5, 100);
 	int mazeWidth = VI::verifyIntInput
-					("Please specify the width of the maze in the range [5, 50]: ",5, 50);
+					("Please specify the width of the maze in the range [5, 100]: ",5, 100);
 
 	int cellHeight = (WINDOW_HEIGHT - HEIGHT_OFFSET * 2) / mazeHeight;
 	int cellWidth = (WINDOW_WIDTH - WIDTH_OFFSET * 2) / mazeWidth;
@@ -37,6 +37,9 @@ int main() {
 }
 
 void drawMaze(MAZE::MazeGeneration &mazeToDraw, int mazeHeight, int cellHeight, int mazeWidth, int cellWidth) {
+	bool instantReveal = VI::verifyIntInput
+		("Would you like the maze to be revealed instantly? (1)Yes or (0)No: ", 0, 1);
+
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Test");
 	SetTargetFPS(60);
 
@@ -52,8 +55,11 @@ void drawMaze(MAZE::MazeGeneration &mazeToDraw, int mazeHeight, int cellHeight, 
 			DrawRectangleLines(WIDTH_OFFSET, HEIGHT_OFFSET,
 				WINDOW_WIDTH - WIDTH_OFFSET * 2, WINDOW_HEIGHT - HEIGHT_OFFSET * 2, WHITE);
 
-			int reveal = static_cast<int>(GetTime() * 120);
-			reveal = std::min(reveal + 1, mazeHeight * mazeWidth);
+			int reveal{};
+			if (!instantReveal) {
+				reveal = static_cast<int>(GetTime() * 360);
+				reveal = std::min(reveal + 1, mazeHeight * mazeWidth);
+			}
 
 			int startX{}, endX{}, currentX{}, startY{}, endY{}, currentY{};
 
@@ -65,7 +71,7 @@ void drawMaze(MAZE::MazeGeneration &mazeToDraw, int mazeHeight, int cellHeight, 
 
 			for (int row = 0; row < mazeHeight; row++) {
 				for (int col = 0; col < mazeWidth; col++) {
-					if (row * mazeWidth + col >= reveal) continue;
+					if (!instantReveal && row * mazeWidth + col >= reveal) continue;
 
 					if (col < mazeWidth - 1 && !mazeToDraw.currentMaze->colWallData[row][col]->isBroken) {
 						startY = cellHeight * row + HEIGHT_OFFSET,
