@@ -11,7 +11,7 @@ enum windowAndMazeParams {
 };
 
 void drawMaze(MAZE::MazeGeneration &mazeToDraw, int mazeHeight, int cellHeight, int mazeWidth, int cellWidth);
-void drawEntryOrExit(MAZE::EntryAndExit &wallToBreak, int cellHeight, int heightOffset, int cellWidth, int widthOffset);
+void drawEntryOrExit(MAZE::EntryAndExit &wallToBreak, int cellHeight, int cellWidth);
 
 int main() {
 	int mazeHeight = VI::verifyIntInput
@@ -22,16 +22,16 @@ int main() {
 	int cellHeight = (WINDOW_HEIGHT - HEIGHT_OFFSET * 2) / mazeHeight;
 	int cellWidth = (WINDOW_WIDTH - WIDTH_OFFSET * 2) / mazeWidth;
 
-	MAZE::MazeGeneration testMaze(mazeHeight, mazeWidth);
-	testMaze.initMaze();
+	MAZE::MazeGeneration currentMaze(mazeHeight, mazeWidth);
+	currentMaze.initMaze();
 
-	testMaze.entryCoords.setCoords(0, 0,  MAZE::WEST);
-	testMaze.exitCoords.setCoords(mazeHeight / 2, mazeWidth - 1, MAZE::EAST);
+	currentMaze.entryCoords.setCoords(0, 0,  MAZE::WEST);
+	currentMaze.exitCoords.setCoords(mazeHeight / 2, mazeWidth - 1, MAZE::EAST);
 
-	while (testMaze.iterateMaze()){};
+	while (currentMaze.iterateMaze()){};
 	std::cout << "Maze Generation Finished." << std::endl;
 
-	drawMaze(testMaze, mazeHeight, cellHeight, mazeWidth, cellWidth);
+	drawMaze(currentMaze, mazeHeight, cellHeight, mazeWidth, cellWidth);
 
 	return 0;
 }
@@ -40,7 +40,7 @@ void drawMaze(MAZE::MazeGeneration &mazeToDraw, int mazeHeight, int cellHeight, 
 	bool instantReveal = VI::verifyIntInput
 		("Would you like the maze to be revealed instantly? (1)Yes or (0)No: ", 0, 1);
 
-	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Test");
+	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "A maze of all time for sure");
 	SetTargetFPS(60);
 
 	while (!WindowShouldClose()) {
@@ -63,11 +63,9 @@ void drawMaze(MAZE::MazeGeneration &mazeToDraw, int mazeHeight, int cellHeight, 
 
 			int startX{}, endX{}, currentX{}, startY{}, endY{}, currentY{};
 
-			drawEntryOrExit(mazeToDraw.entryCoords, cellHeight, HEIGHT_OFFSET,
-													cellWidth, WIDTH_OFFSET);
+			drawEntryOrExit(mazeToDraw.entryCoords, cellHeight, cellWidth);
 
-			drawEntryOrExit(mazeToDraw.exitCoords, cellHeight, HEIGHT_OFFSET,
-													cellWidth, WIDTH_OFFSET);
+			drawEntryOrExit(mazeToDraw.exitCoords, cellHeight, cellWidth);
 
 			for (int row = 0; row < mazeHeight; row++) {
 				for (int col = 0; col < mazeWidth; col++) {
@@ -97,7 +95,7 @@ void drawMaze(MAZE::MazeGeneration &mazeToDraw, int mazeHeight, int cellHeight, 
 	}
 }
 
-void drawEntryOrExit(MAZE::EntryAndExit &wallToBreak, int cellHeight, int heightOffset, int cellWidth, int widthOffset) {
+void drawEntryOrExit(MAZE::EntryAndExit &wallToBreak, int cellHeight, int cellWidth) {
 	int startX{}, endX{}, currentX{}, startY{}, endY{}, currentY{};
 
 	switch (wallToBreak.dir) {
