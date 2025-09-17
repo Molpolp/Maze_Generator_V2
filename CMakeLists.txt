@@ -10,11 +10,13 @@ add_executable(Maze_Generator_V2 main.cpp
         MazeData.h
         CellAndWallData.cpp
         CellAndWallData.h
-        MazeGeneration.cpp
-        MazeGeneration.h
+        MazeOperations.cpp
+        MazeOperations.h
         VerifyInput.cpp
         VerifyInput.h
 )
+
+#Dijkstras Path Algorithm
 
 if (TARGET raylib::raylib)
     target_link_libraries(Maze_Generator_V2 PRIVATE raylib::raylib)

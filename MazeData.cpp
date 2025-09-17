@@ -23,7 +23,7 @@ namespace MAZE {
 				if (row != (totalRows - 1)) {delete rowWallData[row][col];}
 				if (col != (totalCols - 1)) {delete colWallData[row][col];}
 			}
-			delete[] rowWallData[row];
+			if (row != (totalRows - 1)) {delete rowWallData[row];}
 			delete[] colWallData[row];
 		}
 		delete[] rowWallData;
